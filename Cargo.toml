@@ -1,0 +1,14 @@
+[package]
+name = "steam-crud"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "*"
+sqlx = { version = "*", features = ["postgres", "runtime-tokio", "tls-native-tls", "macros"] }
+tokio = { version = "*", features = ["full"] }
+serde = "*"
+serde_json = "*"
+dotenv = "*"
+tower = { version = "*", features = ["limit"] }
+tower-http = { version = "*", features = ["cors", "trace"] }
