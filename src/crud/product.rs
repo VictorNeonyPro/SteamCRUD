@@ -1,4 +1,7 @@
 pub mod create;
+mod delete;
+mod get;
+mod update;
 
 use axum::Json;
 use axum::response::IntoResponse;
