@@ -1,5 +1,6 @@
 use axum::extract::State;
 use axum::Json;
+use bigdecimal::BigDecimal;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use crate::models::product::Product;
@@ -14,7 +15,8 @@ pub struct GetProductRequest {
 pub enum GetProductResponse {
     Success {
         name: String,
-        owner: String,
+        creator: i32,
+        price: BigDecimal
     },
     UnknownProduct,
 }
@@ -25,7 +27,7 @@ pub async fn get_product(State(pool): State<PgPool>, Json(request): Json<GetProd
         .await;
     
     match result {
-        Ok(result) => Json(GetProductResponse::Success{ name: result.name, owner: result.owner }),
+        Ok(result) => Json(GetProductResponse::Success{ name: result.name, creator: result.creator, price: result.price }),
         Err(_) => Json(GetProductResponse::UnknownProduct),
     }
 }

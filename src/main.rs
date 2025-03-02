@@ -1,30 +1,24 @@
 mod crud;
 mod models;
 
-use axum::{
-    extract::{State, Path},
-    http::StatusCode,
-    routing::{get, patch},
-    Router,
-    Json
-};
 use axum::http::Method;
 use axum::response::IntoResponse;
+use axum::{
+    routing::get,
+    Router
+};
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 
-use tower::limit::ConcurrencyLimitLayer;
-use tower_http::cors::{AllowHeaders, AllowOrigin, Any, CorsLayer};
+use tower_http::cors::{AllowHeaders, AllowOrigin, CorsLayer};
 
 use tower_http::trace::TraceLayer;
 
-use sqlx::{PgPool, postgres::PgPoolOptions, Postgres, Pool};
+use sqlx::postgres::PgPoolOptions;
 
+use crate::crud::product::create::create_product;
+use crate::crud::product::{delete_product, get_product, update_product};
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
-use crate::crud::steamaccount::*;
-use crate::crud::product::*;
-use crate::crud::transaction::*;
 
 #[tokio::main]
 async fn main() {
@@ -57,12 +51,7 @@ async fn main() {
     // compose routes
     let app = Router::new()
         .route("/", get(|| async { "Hello, World!" }))
-        .route("/steamaccounts", get(get_steamaccounts).post(create_steamaccount))
-        .route("/steamaccounts/:steamaccount_id", patch(update_steamaccount).delete(delete_steamaccount))
-        .route("/products", get(get_products).post(create_product))
-        .route("/products/:product_id", patch(update_product).delete(delete_product))
-        .route("/transactions", get(get_transactions).post(create_transaction))
-        .route("/transactions/:product_id", patch(update_transaction).delete(delete_transaction))
+        .route("/products", get(get_product).post(create_product).patch(update_product).delete(delete_product))
         .with_state(database_pool)
         .layer(
             ServiceBuilder::new()

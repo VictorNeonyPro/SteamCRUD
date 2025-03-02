@@ -5,10 +5,12 @@ edition = "2021"
 
 [dependencies]
 axum = "*"
-sqlx = { version = "*", features = ["postgres", "runtime-tokio", "tls-native-tls", "macros"] }
+sqlx = { version = "*", features = ["postgres", "runtime-tokio", "tls-native-tls", "macros", "bigdecimal", "chrono"] }
 tokio = { version = "*", features = ["full"] }
 serde = "*"
 serde_json = "*"
 dotenv = "*"
 tower = { version = "*", features = ["limit"] }
 tower-http = { version = "*", features = ["cors", "trace"] }
+bigdecimal = {  version = "*", features = ["serde"] }
+chrono = { version = "0.4", features = ["serde"] }
