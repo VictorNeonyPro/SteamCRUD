@@ -1,12 +1,7 @@
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::Json;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct DeleteProductRequest {
-    pub name: String
-}
 
 #[derive(Copy, Clone, Serialize ,Deserialize)]
 pub enum DeleteProductResponse {
@@ -14,8 +9,8 @@ pub enum DeleteProductResponse {
     NotFound,
 }
 
-pub async fn delete_product(State(pool): State<PgPool>, Json(request): Json<DeleteProductRequest>) -> Json<DeleteProductResponse> {
-    let result = sqlx::query!("DELETE FROM Steam.Products WHERE name = $1", request.name)
+pub async fn delete_product(State(pool): State<PgPool>, Path(id): Path<i32>) -> Json<DeleteProductResponse> {
+    let result = sqlx::query!("DELETE FROM Steam.Products WHERE id = $1", id)
         .execute(&pool)
         .await;
 

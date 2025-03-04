@@ -1,4 +1,4 @@
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::Json;
 use bigdecimal::BigDecimal;
 use serde::{Deserialize, Serialize};
@@ -7,7 +7,7 @@ use crate::models::product::Product;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct GetProductRequest {
-    pub name: String,
+    pub id: i32
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -21,8 +21,8 @@ pub enum GetProductResponse {
     UnknownProduct,
 }
 
-pub async fn get_product(State(pool): State<PgPool>, Json(request): Json<GetProductRequest>) -> Json<GetProductResponse> {
-    let result = sqlx::query_as!(Product, "SELECT * FROM Steam.Products WHERE name = $1;", request.name)
+pub async fn get_product(State(pool): State<PgPool>, Path(id): Path<i32>) -> Json<GetProductResponse> {
+    let result = sqlx::query_as!(Product, "SELECT * FROM Steam.Products WHERE id = $1;", id)
         .fetch_one(&pool)
         .await;
     

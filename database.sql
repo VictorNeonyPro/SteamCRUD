@@ -15,7 +15,7 @@ CREATE TABLE Steam.Wallets (
 
 CREATE TABLE Steam.Products (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(45) UNIQUE NOT NULL,
+    name VARCHAR(45) NOT NULL,
     creator INTEGER NOT NULL,
     price NUMERIC(10,2) NOT NULL,
     FOREIGN KEY (creator) REFERENCES Steam.Accounts(id) ON DELETE CASCADE
